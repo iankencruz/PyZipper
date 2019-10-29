@@ -1,68 +1,48 @@
 """" Python Application to zip up files and rename it recursively  """
 
 from os.path import basename
-from zipfile import ZipFile
-import os, shutil
-
+import os, shutil, zipfile
 
 
 ## Get the base name for the project and store it
 base_name = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
+file_path = os.path.dirname(os.path.abspath(__file__))          #Current files filepath
+
+# path to folder which needs to be zipped 
+directory = os.getcwd()
+base_dir = '{}{}'.format(directory, "\ ".strip())
+target_dir = base_dir + "\Backup"
+
+# Initialize base vars
+dirList = list()
+dirLength = 0
 
 
-def zipdir(path, zip_File):
-    # ziph is zipfile handle
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            zip_File.write(os.path.join(root, file))
-            print(files)
 
-def create_zip(dir, file_name):
-    zipf = ZipFile(dir + "\ " +  file_name, "w")
-    zipdir(dir, zipf)
-    zipf.close()
+
 
 def main():
+
+    print("CWD: " + os.getcwd())
+    if not os.path.exists(target_dir):
+        os.mkdir(target_dir)
+        print("Folder dooes not exist")
+    else:
+        print("Folder exists")
+        dirList = os.listdir(target_dir)
+        dirLength = len(dirList)
+        print(dirList)
+        print(dirLength)
     
-
-    # path to folder which needs to be zipped 
-    directory = os.getcwd()
-    dst = directory + base_name + "\Backup\ ".strip()
-
-    targetDir = '{}\{}\{}'.format(directory, base_name,"Backup")
-    dirLength = 0
-
-    # Check if backup folder already exist
-    # if not -> create a backup folder
-    if not os.path.exists(targetDir):
-        os.mkdir(targetDir)
-
-    else:   
-        # print ("Path exists")
-        dirList = os.listdir(targetDir)
-        dirLength = len(dirList)   
-
-    # writing files to a zipfile     
-    # file name and number
     f_num = str(dirLength).zfill(2)
-    f_name = '{}_{}{}'.format(base_name, f_num, ".zip")
+    f_name = "{}_{}_{}".format("BKUP", base_name, f_num)
 
-    print("TARGETDIR: " + dst)        ###DEBUG
-
+    shutil.make_archive(f_name, "zip", os.getcwd())
     
+    archived = "{}\{}{}".format(os.getcwd(), f_name, ".zip")
+    print("ArchivedFile: " +  archived)
+    print("Make_Archive Complete!")
 
-   
-        
-
-        
-    
-    try:
-        create_zip(targetDir, f_name)
-        print("ZipFile created Successfully!")
-    except FileExistsError:
-        print("Cannot Find File")
-        return
-  
 
     
 
