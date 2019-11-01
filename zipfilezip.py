@@ -1,13 +1,12 @@
 import os
-from shutil import move
+import shutil
 from zipfile import ZipFile
 
 
-# Desired Backup destination folder
-directory = r"C:\Users\iankr\Documents\Kens Folder\Projects"
-
 # Get the base name for the project and store it
 base_name = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
+# Desired Backup destination folder
+directory = r"C:\Users\iankr\Documents\Kens Folder\Projects"
 
 # Get and combine all files you want to zip as dir paths
 def get_all_file_paths(directory): 
@@ -65,12 +64,11 @@ def main():
             zip.write(file) 
     
 
-    # Try to move file to dst dir, fails if file does not exist
+
     try:
         if os.path.exists(file):
-            move(f_name, target_dir)        #shutil.move()
+            shutil.move(f_name, target_dir)
             print("Move Success!")
-            print ("New Location: {}".format(target_dir))
     except FileExistsError:
         print("File does Not Exist!")
 
