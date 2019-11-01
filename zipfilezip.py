@@ -1,23 +1,21 @@
 import os
+import shutil
 from zipfile import ZipFile
 
 
-## Get the base name for the project and store it
+# Get the base name for the project and store it
 base_name = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
-file_path = os.path.dirname(os.path.abspath(__file__))          #Current files filepath
+# Desired Backup destination folder
+directory = r"C:\Users\iankr\Documents\Kens Folder\Projects"
 
-
-
-directory = r"C:\Users\Ian\Documents\PersonalProjects\Backups"
-
-
+# Get and combine all files you want to zip as dir paths
 def get_all_file_paths(directory): 
   
     # initializing empty file paths list 
     file_paths = [] 
   
     # crawling through directory and subdirectories 
-    for root, directories, files in os.walk(directory): 
+    for root, directories, files in os.walk(directory):
         for filename in files: 
             # join the two strings in order to form the full filepath. 
             filepath = os.path.join(root, filename) 
@@ -26,11 +24,13 @@ def get_all_file_paths(directory):
     # returning all file paths 
     return file_paths  
 
+
+# Main Execution
 def main(): 
     # path to folder which needs to be zipped 
     zip_directory = '.'
     #base_dir = '{}{}'.format(directory, "\ ".strip())
-    target_dir = directory
+    target_dir = os.path.join(directory,"Backups")
 
     # Initialize base vars
     dirList = list()
@@ -38,7 +38,7 @@ def main():
 
     if not os.path.exists(target_dir):
         os.mkdir(target_dir)
-        print("Folder dooes not exist")
+        print("Folder does not exist")
     else:
         print("Folder exists")
         dirList = os.listdir(target_dir)
@@ -61,10 +61,21 @@ def main():
     with ZipFile(f_name,'w') as zip: 
         # writing each file one by one 
         for file in file_paths: 
-            zip.write(file, f_name) 
-  
+            zip.write(file) 
+    
+
+
+    try:
+        if os.path.exists(file):
+            shutil.move(f_name, target_dir)
+            print("Move Success!")
+    except FileExistsError:
+        print("File does Not Exist!")
+
+
+    print("###############################")
     print('All files zipped successfully!')         
-  
+    print("###############################")
   
 if __name__ == "__main__": 
     main()
