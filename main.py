@@ -1,32 +1,45 @@
-"""" Python Application to zip up files and rename it recursively  """
+import os
+from shutil import move
+from zipfile import ZipFile
 
-from os.path import basename
-import os, shutil, zipfile
 
+# Desired Backup destination folder
+directory = r"C:\Users\iankr\Documents\Kens Folder\Projects"
 
-## Get the base name for the project and store it
+# Get the base name for the project and store it
 base_name = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
-file_path = os.path.dirname(os.path.abspath(__file__))          #Current files filepath
 
-# path to folder which needs to be zipped 
-directory = os.getcwd()
-base_dir = '{}{}'.format(directory, "\ ".strip())
-target_dir = base_dir + "\Backup"
+# Get and combine all files you want to zip as dir paths
+def get_all_file_paths(directory): 
+  
+    # initializing empty file paths list 
+    file_paths = [] 
+  
+    # crawling through directory and subdirectories 
+    for root, directories, files in os.walk(directory):
+        for filename in files: 
+            # join the two strings in order to form the full filepath. 
+            filepath = os.path.join(root, filename) 
+            file_paths.append(filepath) 
+  
+    # returning all file paths 
+    return file_paths  
 
-# Initialize base vars
-dirList = list()
-dirLength = 0
 
+# Main Execution
+def main(): 
+    # path to folder which needs to be zipped 
+    zip_directory = '.'
+    #base_dir = '{}{}'.format(directory, "\ ".strip())
+    target_dir = os.path.join(directory,"Backups")
 
+    # Initialize base vars
+    dirList = list()
+    dirLength = 0
 
-
-
-def main():
-
-    print("CWD: " + os.getcwd())
     if not os.path.exists(target_dir):
         os.mkdir(target_dir)
-        print("Folder dooes not exist")
+        print("Folder does not exist")
     else:
         print("Folder exists")
         dirList = os.listdir(target_dir)
@@ -35,17 +48,36 @@ def main():
         print(dirLength)
     
     f_num = str(dirLength).zfill(2)
-    f_name = "{}_{}_{}".format("BKUP", base_name, f_num)
+    f_name = "{}_{}_{}{}".format("BKUP", base_name, f_num, ".zip")          #File Name
 
-    shutil.make_archive(f_name, "zip", os.getcwd())
+    # calling function to get all file paths in the directory 
+    file_paths = get_all_file_paths(zip_directory) 
+  
+    # printing the list of all files to be zipped 
+    print('Following files will be zipped:') 
+    for file_name in file_paths: 
+        print(file_name) 
+  
+    # writing files to a zipfile 
+    with ZipFile(f_name,'w') as zip: 
+        # writing each file one by one 
+        for file in file_paths: 
+            zip.write(file) 
     
-    archived = "{}\{}{}".format(os.getcwd(), f_name, ".zip")
-    print("ArchivedFile: " +  archived)
-    print("Make_Archive Complete!")
+
+    # Try to move file to dst dir, fails if file does not exist
+    try:
+        if os.path.exists(file):
+            move(f_name, target_dir)        #shutil.move()
+            print("Move Success!")
+            print ("New Location: {}".format(target_dir))
+    except FileExistsError:
+        print("File does Not Exist!")
 
 
-    
-
-# run Main function
+    print("###############################")
+    print('All files zipped successfully!')         
+    print("###############################")
+  
 if __name__ == "__main__": 
-    main() 
+    main()
