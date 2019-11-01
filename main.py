@@ -30,7 +30,6 @@ def get_all_file_paths(directory):
 def main(): 
     # path to folder which needs to be zipped 
     zip_directory = '.'
-    #base_dir = '{}{}'.format(directory, "\ ".strip())
     target_dir = os.path.join(directory,"Backups")
 
     # Initialize base vars
@@ -64,12 +63,15 @@ def main():
         for file in file_paths: 
             zip.write(file) 
     
+    print("  ")
+    print("###############################")
 
     # Try to move file to dst dir, fails if file does not exist
     try:
         if os.path.exists(file):
             move(f_name, target_dir)        #shutil.move()
             print("Move Success!")
+            print("File Name: " + f_name)
             print ("New Location: {}".format(target_dir))
     except FileExistsError:
         print("File does Not Exist!")
