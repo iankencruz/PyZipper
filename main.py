@@ -4,7 +4,7 @@ from zipfile import ZipFile
 
 
 # Desired Backup destination folder
-directory = r"C:\Users\iankr\Documents\Kens Folder\Projects"
+directory = r"C:\Users\Ian\Documents\PersonalProjects"
 
 # Get the base name for the project and store it
 base_name = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
@@ -30,18 +30,17 @@ def get_all_file_paths(directory):
 def main(): 
     # path to folder which needs to be zipped 
     zip_directory = '.'
-    target_dir = os.path.join(directory,"Backups")
 
     # Initialize base vars
     dirList = list()
     dirLength = 0
 
-    if not os.path.exists(target_dir):
-        os.mkdir(target_dir)
+    if not os.path.exists(directory):
+        os.mkdir(directory)
         print("Folder does not exist")
     else:
         print("Folder exists")
-        dirList = os.listdir(target_dir)
+        dirList = os.listdir(directory)
         dirLength = len(dirList)
         print(dirList)
         print(dirLength)
@@ -69,10 +68,10 @@ def main():
     # Try to move file to dst dir, fails if file does not exist
     try:
         if os.path.exists(file):
-            move(f_name, target_dir)        #shutil.move()
+            move(f_name, directory)        #shutil.move()
             print("Move Success!")
             print("File Name: " + f_name)
-            print ("New Location: {}".format(target_dir))
+            print ("New Location: {}".format(directory))
     except FileExistsError:
         print("File does Not Exist!")
 
